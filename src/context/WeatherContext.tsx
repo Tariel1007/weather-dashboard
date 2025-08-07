@@ -13,7 +13,7 @@ interface WeatherState {
 type WeatherAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_WEATHER_DATA'; payload: WeatherData }
-  | { type: 'SET_ERROR'; payload: string }
+  | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'SET_LOCATION'; payload: string }
   | { type: 'UPDATE_PREFERENCES'; payload: Partial<UserPreferences> }
   | { type: 'TOGGLE_THEME' }
