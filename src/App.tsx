@@ -16,7 +16,6 @@ const WeatherDashboard: React.FC = () => {
   const { state, fetchWeather, fetchWeatherByCoords } = useWeather();
 
   useEffect(() => {
-    // Try to get user's location on first load
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -24,12 +23,10 @@ const WeatherDashboard: React.FC = () => {
         },
         (error) => {
           console.log('Geolocation error:', error);
-          // Fallback to default location
           fetchWeather(state.currentLocation);
         }
       );
     } else {
-      // Fallback to default location
       fetchWeather(state.currentLocation);
     }
   }, []);
@@ -49,36 +46,24 @@ const WeatherDashboard: React.FC = () => {
   return (
     <div className="weather-dashboard">
       <Header />
-      
       <main className="dashboard-main">
         <div className="dashboard-grid">
-          {/* Core Weather Information */}
           <section className="current-weather-section">
             <CurrentWeather />
           </section>
-
-          {/* Location Search and Settings */}
           <section className="controls-section">
             <LocationSearch />
             <Settings />
           </section>
-
-          {/* Hourly Forecast */}
           <section className="hourly-forecast-section">
             <HourlyForecast />
           </section>
-
-          {/* Daily Forecast */}
           <section className="daily-forecast-section">
             <DailyForecast />
           </section>
-
-          {/* Environmental Data */}
           <section className="environmental-data-section">
             <EnvironmentalData />
           </section>
-
-          {/* Weather Alerts */}
           {state.weatherData.alerts.length > 0 && (
             <section className="alerts-section">
               <WeatherAlerts />
@@ -98,4 +83,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; 
+export default App;
