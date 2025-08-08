@@ -6,13 +6,14 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [location, setLocation] = useState('London');
+  const [searchInput, setSearchInput] = useState('London');
   const [units, setUnits] = useState('metric');
   const [theme, setTheme] = useState('light');
 
-  const fetchWeather = useCallback(async () => {
+  const fetchWeather = useCallback(async (searchLocation) => {
     try {
       setLoading(true);
-      const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=b8e50a44d75a416f98591324250808&q=${location}&days=7&aqi=yes`);
+      const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=b8e50a44d75a416f98591324250808&q=${searchLocation}&days=7&aqi=yes`);
       const data = await response.json();
       setWeather(data);
       setLoading(false);
@@ -20,14 +21,21 @@ function App() {
       setError('Failed to fetch weather data');
       setLoading(false);
     }
-  }, [location]);
+  }, []);
 
   useEffect(() => {
-    fetchWeather();
-  }, [fetchWeather]);
+    fetchWeather(location);
+  }, [fetchWeather, location]);
 
   const handleLocationChange = (e) => {
-    setLocation(e.target.value);
+    setSearchInput(e.target.value);
+  };
+
+  const handleLocationSubmit = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      setLocation(searchInput.trim());
+    }
   };
 
   const toggleUnits = () => {
@@ -67,13 +75,18 @@ function App() {
         <header className="header">
           <h1>Weather Dashboard</h1>
           <div className="controls">
-            <input 
-              type="text" 
-              value={location} 
-              onChange={handleLocationChange}
-              placeholder="Enter location..."
-              className="location-input"
-            />
+            <form onSubmit={handleLocationSubmit} className="search-form">
+              <input 
+                type="text" 
+                value={searchInput} 
+                onChange={handleLocationChange}
+                placeholder="Enter location..."
+                className="location-input"
+              />
+              <button type="submit" className="search-button">
+                Search
+              </button>
+            </form>
             <button onClick={toggleUnits} className="unit-toggle">
               {units === 'metric' ? '°C' : '°F'}
             </button>
