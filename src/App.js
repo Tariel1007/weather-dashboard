@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 function App() {
@@ -9,11 +9,7 @@ function App() {
   const [units, setUnits] = useState('metric');
   const [theme, setTheme] = useState('light');
 
-  useEffect(() => {
-    fetchWeather();
-  }, [location]);
-
-  const fetchWeather = async () => {
+  const fetchWeather = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=b8e50a44d75a416f98591324250808&q=${location}&days=7&aqi=yes`);
@@ -24,7 +20,11 @@ function App() {
       setError('Failed to fetch weather data');
       setLoading(false);
     }
-  };
+  }, [location]);
+
+  useEffect(() => {
+    fetchWeather();
+  }, [fetchWeather]);
 
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
